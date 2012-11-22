@@ -1,19 +1,23 @@
+"""
+Requests a location from standard input.
+Prints out nearby businesses from the Yelp API, and then the fulltext of the first review scraped from the URL.
+"""
+
 from yelp import ReviewSearchApi
 
 import re
 try: import urllib.request as urllib2 #python 3.X
 except ImportError: import urllib2
 
-url = 'http://www.yelp.com/biz/bar-none-new-york'
+key = raw_input('Enter an API Key: ')
+location = raw_input('Enter a location: ')
 
-key = '-zHKh7Z8UaWOSNECS85GWA'
-results = ReviewSearchApi(client_key=key, output="json").by_location("West 4th Street, New York, NY")
+results = ReviewSearchApi(client_key=key, output="json").by_location(location, term='', radius=1)
 
 def get_page(url):
     request = urllib2.urlopen(url) # open url
     response = str(request.read()) # read web page
     return response
-
 
 review_count_pattern = '(\d*)\sReview'
 review_pattern = 'review_comment.*?>(.*?)</p'
